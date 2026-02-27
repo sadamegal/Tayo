@@ -1,4 +1,8 @@
 # Tayo
+[![Tests](https://github.com/sadamegal/Tayo/actions/workflows/tests.yml/badge.svg)](https://github.com/sadamegal/Tayo/actions/workflows/tests.yml)
+[![Latest Version](https://img.shields.io/packagist/v/sadam/tayo.svg?style=flat-square)](https://packagist.org/packages/sadam/tayo)
+[![PHP Version](https://img.shields.io/packagist/php-v/sadam/tayo.svg?style=flat-square)](https://packagist.org/packages/sadam/tayo)
+[![License](https://img.shields.io/packagist/l/sadam/tayo.svg?style=flat-square)](LICENSE)
 
 Tayo provides interactive chart components for Laravel Livewire. Charts are defined entirely in PHP and Blade — no JavaScript configuration required.
 
@@ -62,19 +66,31 @@ Pass data from a Livewire property or computed property. The chart updates autom
 use Livewire\Component;
 use Livewire\Attributes\Computed;
 
-new class extends Component
-{
+new class extends Component {
     public string $period = 'monthly';
 
     #[Computed]
-    public function chartData(): array
+    public function getbarChartProperty(): array
     {
-        return Sale::forPeriod($this->period)
-            ->get()
-            ->map(fn ($s) => ['label' => $s->label, 'value' => $s->total])
-            ->toArray();
+        $data = [
+            'monthly' => [
+                ['label' => 'Jan', 'value' => 120], ['label' => 'Feb', 'value' => 98], 
+                ['label' => 'Mar', 'value' => 145], ['label' => 'Apr', 'value' => 132], 
+                ['label' => 'May', 'value' => 165], ['label' => 'Jun', 'value' => 178]
+            ],
+            'quarterly' => [
+                ['label' => 'Q1', 'value' => 380], 
+                ['label' => 'Q2', 'value' => 420], 
+                ['label' => 'Q3', 'value' => 395], 
+                ['label' => 'Q4', 'value' => 510]],
+            'yearly' => [
+                ['label' => '2021', 'value' => 1200], 
+                ['label' => '2022', 'value' => 1480], 
+                ['label' => '2023', 'value' => 1750], 
+                ['label' => '2024', 'value' => 2100]],
+        ];
+        return $data[$this->period];
     }
-
 };
 ?>
 
@@ -85,12 +101,9 @@ new class extends Component
         <option value="quarterly">Quarterly</option>
     </select>
 
-    <x-tayo::chart
-        type="bar"
-        :data="$this->chartData()"
-        title="Sales"
-    />
+    <x-tayo::chart type="bar" :data="$this->barChart" title="Sales" />
 </div>
+
 ```
 
 ## Chart Types
