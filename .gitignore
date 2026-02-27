@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+vendor/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.phpstorm.meta.php
+_ide_helper.php
+
+# Build
+npm-debug.log*
+vite.config.js.timestamp-*
+
+# PHP / Testing
+.phpunit.result.cache
+.phpunit.cache/
+coverage/
+.coverage/
+
+
+# NOTE: resources/js/d3-chart.js is intentionally committed.
+# It is the built artifact served to users — they should never need to run npm install.

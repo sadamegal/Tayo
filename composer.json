@@ -1,0 +1,42 @@
+{
+    "name": "sadam/tayo",
+    "description": "A Laravel package for creating interactive charts using Livewire, Alpine.js, and D3.js.",
+    "type": "library",
+    "keywords": ["laravel", "livewire", "alpine", "d3", "charts", "visualization", "data", "interactive", "dashboard", "analytics","livewire-charts", "alpine-charts", "d3-charts", "laravel-charts", "data-visualization", "charting-library", "interactive-charts", "responsive-charts", "customizable-charts"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sadam Abdulahi",
+            "email": "contact@sadam.ca"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "illuminate/routing": "^10.0|^11.0|^12.0",
+        "livewire/livewire": "^3.0|^4.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0|^9.0|^10.0",
+        "phpunit/phpunit": "^10.0|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sadam\\Tayo\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sadam\\Tayo\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sadam\\Tayo\\TayoServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
