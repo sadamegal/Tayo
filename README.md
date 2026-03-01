@@ -4,7 +4,9 @@
 [![PHP Version](https://img.shields.io/packagist/php-v/sadam/tayo.svg?style=flat-square)](https://packagist.org/packages/sadam/tayo)
 [![License](https://img.shields.io/packagist/l/sadam/tayo.svg?style=flat-square)](LICENSE)
 
-Tayo provides interactive chart components for Laravel Livewire. Charts are defined entirely in PHP and Blade — no JavaScript configuration required.
+Tayo provides interactive chart components for Laravel Livewire. Charts are defined entirely in PHP and Blade — no JavaScript configuration required.  
+
+Check out the [Demo](https://tayo.sadam.ca/demo)
 
 ## Requirements
 

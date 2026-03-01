@@ -13,37 +13,56 @@ export function drawHistogram(data, { svgEl, canvasEl, tooltipEl, height, colors
     const svg  = freshSvg(svgEl, canvasEl ? canvasEl.clientWidth : 500, height);
     const g    = mainG(svg);
 
-    const x    = d3.scaleLinear().domain(d3.extent(vals)).nice().range([0, W]);
-    const bins = d3.bin().domain(x.domain()).thresholds(x.ticks(20))(vals);
-    const y    = d3.scaleLinear()
-        .domain([0, d3.max(bins, b => b.length)])
+    const x        = d3.scaleLinear().domain(d3.extent(vals)).nice().range([0, W]);
+    const binCount = Math.min(20, Math.ceil(Math.sqrt(vals.length)));
+    const bins     = d3.bin().domain(x.domain()).thresholds(x.ticks(binCount))(vals);
+
+    const maxCount = d3.max(bins, b => b.length);
+    const y = d3.scaleLinear()
+        .domain([0, maxCount])
         .nice()
         .range([H, 0]);
 
-    gridY(g, y, W);
+    gridY(g, y, W, Math.min(5, maxCount));
     axisX(g, x, H);
-    axisY(g, y);
+    axisY(g, y, v => Number.isInteger(v) ? String(v) : '');
+
+    const R = 3; 
+
+    
+    const barPath = (x0, x1, yTop) => {
+        const bx = x(x0);
+        const bw = Math.max(0, x(x1) - x(x0));
+        const bh = H - yTop;
+        if (bw <= 0 || bh <= 0) return '';
+        const r  = Math.min(R, bw / 2, bh);
+        return `M${bx},${H}` +
+               `L${bx},${yTop + r}` +
+               `Q${bx},${yTop} ${bx + r},${yTop}` +
+               `L${bx + bw - r},${yTop}` +
+               `Q${bx + bw},${yTop} ${bx + bw},${yTop + r}` +
+               `L${bx + bw},${H}Z`;
+    };
 
     const bars = g.selectAll('.hb')
         .data(bins)
-        .join('rect')
+        .join('path')
         .attr('class', 'hb')
-        .attr('x',      b => x(b.x0) + 1)
-        .attr('width',  b => Math.max(0, x(b.x1) - x(b.x0) - 2))
-        .attr('y',      H)
-        .attr('height', 0)
-        .attr('rx', 3)
-        .attr('fill', colors[0])
+        .attr('d',            b => barPath(b.x0, b.x1, H))
+        .attr('fill',         colors[0])
         .attr('fill-opacity', 0.85);
 
     bars.transition().duration(550).ease(d3.easeCubicOut)
-        .attr('y',      b => y(b.length))
-        .attr('height', b => H - y(b.length));
+        .attr('d', b => barPath(b.x0, b.x1, y(b.length)));
+
+    const fmt = vals.every(v => Number.isInteger(v))
+        ? v => String(Math.round(v))
+        : v => d3.format('.2~f')(v);
 
     bars
         .on('mouseenter', (ev, b) => {
             d3.select(ev.currentTarget).attr('fill-opacity', 1);
-            showTip(ev, canvasEl, tooltipEl, `${b.x0} – ${b.x1}`, `${b.length} items`);
+            showTip(ev, canvasEl, tooltipEl, `${fmt(b.x0)} – ${fmt(b.x1)}`, `${b.length} items`);
         })
         .on('mousemove',  ev => moveTip(ev, canvasEl, tooltipEl))
         .on('mouseleave', ev => {
